@@ -52,8 +52,8 @@ export default class Admin {
     });
     if (admin) {
       if (admin.password === password) {
-        const _login = new Login<Admin>(admin);
-        return new Result<Login<Admin>>(_login, 200);
+        const _login = new Login(admin, true);
+        return new Result<Login>(_login, 200);
       } else {
         return new Result<Admin>(new Error("Incorrect password!"), 400);
       }

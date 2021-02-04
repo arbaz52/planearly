@@ -55,8 +55,8 @@ export default class Traveler {
     });
     if (traveler) {
       if (traveler.password === password) {
-        const _login = new Login<Traveler>(traveler);
-        return new Result<Login<Traveler>>(_login, 200);
+        const _login = new Login(traveler);
+        return new Result<Login>(_login, 200);
       } else {
         return new Result<Traveler>(new Error("Incorrect password!"), 400);
       }
