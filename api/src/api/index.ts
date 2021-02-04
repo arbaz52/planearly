@@ -1,6 +1,7 @@
 import { buildSchema } from "graphql";
 import Admin from "../entity/admin";
 import Traveler from "../entity/traveler";
+import Result from "../model";
 import {
   IContext,
   LoginAdminParams,
@@ -8,6 +9,7 @@ import {
   RegisterAdminParams,
   RegisterTravelerParams,
 } from "../types";
+import { adminOnly } from "../utils";
 
 export const schema = buildSchema(`
   type Query {
@@ -16,6 +18,7 @@ export const schema = buildSchema(`
     admins: [Admin]
     loginTraveler(email: String!, password: String!): TravelerLogin
     travelers: [Traveler]
+    authTest: Boolean
   }
   type Mutation {
     registerAdmin(email: String!, password: String!, fullName: String!): Admin
@@ -75,8 +78,11 @@ export const rootValue = {
     if (travelers.isError()) throw travelers.getError();
     return travelers.getData();
   },
+  authTest: ({}, context: IContext) => {
+    return adminOnly(context.token);
+  },
 
-  //mutationsAdm
+  //mutations
   registerAdmin: async (
     { email, password, fullName }: RegisterAdminParams,
     context: IContext
