@@ -15,3 +15,14 @@ export interface RegisterAdminParams {
   password: string;
   fullName: string;
 }
+
+export interface LoginTravelerParams {
+  email: string;
+  password: string;
+}
+
+export interface RegisterTravelerParams {
+  email: string;
+  password: string;
+  fullName: string;
+}
