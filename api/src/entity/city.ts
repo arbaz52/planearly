@@ -1,5 +1,6 @@
-import { Column, Entity, Index, PrimaryColumn } from "typeorm";
+import { Column, Entity, Index, OneToMany, PrimaryColumn } from "typeorm";
 import { v4 as uuid } from "uuid";
+import Flight from "./flight";
 import Result from "../model";
 import { Database } from "../utils";
 
@@ -12,6 +13,11 @@ export default class City {
   @Column({ type: "varchar", nullable: false })
   name: string;
 
+  @OneToMany(() => Flight, (flight) => flight.from)
+  flightsFrom!: Flight[];
+  @OneToMany(() => Flight, (flight) => flight.to)
+  flightsTo!: Flight[];
+
   constructor(name: string) {
     this.id = uuid();
     this.name = name;
@@ -19,12 +25,15 @@ export default class City {
 
   static async get() {
     const db = new Database<City>(City);
-    const cities = await db.find({});
+    const cities = await db.find({}, ["flightsFrom", "flightsTo"]);
     return new Result<City[]>(cities, 200);
   }
   static async getOne(id: string) {
     const db = new Database<City>(City);
-    const city = await db.findOne({ where: { id } });
+    const city = await db.findOne({ where: { id } }, [
+      "flightsFrom",
+      "flightsTo",
+    ]);
     if (city) return new Result<City>(city, 200);
     return new Result<Error>(new Error("City not found"), 404);
   }

@@ -1,12 +1,13 @@
-import { buildSchema, isType } from "graphql";
+import { buildSchema } from "graphql";
 import Admin from "../entity/admin";
 import City from "../entity/city";
+import Flight from "../entity/flight";
 import Login from "../entity/login";
 import Traveler from "../entity/traveler";
-import Result from "../model";
 import {
   CityParams,
   CreateCityParams,
+  CreateFlightParams,
   IContext,
   LoginAdminParams,
   LoginTravelerParams,
@@ -26,6 +27,10 @@ export const schema = buildSchema(`
     # City
     city(id: ID!): City
     cities: [City]
+
+    # Flight
+    flight(id: ID!): Flight
+    flights: [Flight]
   }
   type Mutation {
     registerAdmin(email: String!, password: String!, fullName: String!): Admin
@@ -33,6 +38,9 @@ export const schema = buildSchema(`
 
     # City
     createCity(name: String!): City
+
+    # Flight
+    createFlight(from: String!, to: String!, cost: Int!): Flight
   }
   type AdminLogin {
     user: Admin
@@ -53,8 +61,17 @@ export const schema = buildSchema(`
     email: String
   }
   type City {
-    id: String
+    id: ID
     name: String
+    flightsFrom: [Flight]
+    flightsTo: [Flight]
+  }
+  type Flight {
+    id: ID
+    from: City
+    to: City
+    cost: Int
+
   }
 `);
 
@@ -108,6 +125,11 @@ export const rootValue = {
     cities.throwError(context);
     return cities.getData();
   },
+  flights: async ({}, context: IContext) => {
+    const flights = await Flight.get();
+    flights.throwError(context);
+    return flights.getData();
+  },
 
   //mutations
   registerAdmin: async (
@@ -136,5 +158,19 @@ export const rootValue = {
     city.throwError(context);
 
     return city.getData();
+  },
+
+  createFlight: async (
+    { cost, from, to }: CreateFlightParams,
+    context: IContext
+  ) => {
+    const isAdmin = Login.isAdmin(context);
+    isAdmin.throwError(context);
+
+    const flight = await Flight.create(from, to, cost);
+
+    flight.throwError(context);
+
+    return flight.getData();
   },
 };

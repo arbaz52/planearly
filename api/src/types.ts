@@ -42,3 +42,9 @@ export interface CityParams {
 export interface CreateCityParams {
   name: string;
 }
+
+export interface CreateFlightParams {
+  from: string;
+  to: string;
+  cost: number;
+}

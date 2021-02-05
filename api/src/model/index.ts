@@ -22,6 +22,7 @@ export default class Result<T> {
   getError() {
     return this.isError() ? this.data : undefined;
   }
+
   getData() {
     return !this.isError() ? this.data : undefined;
   }
