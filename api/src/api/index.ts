@@ -1,8 +1,12 @@
-import { buildSchema } from "graphql";
+import { buildSchema, isType } from "graphql";
 import Admin from "../entity/admin";
+import City from "../entity/city";
 import Login from "../entity/login";
 import Traveler from "../entity/traveler";
+import Result from "../model";
 import {
+  CityParams,
+  CreateCityParams,
   IContext,
   LoginAdminParams,
   LoginTravelerParams,
@@ -18,10 +22,17 @@ export const schema = buildSchema(`
     loginTraveler(email: String!, password: String!): TravelerLogin
     travelers: [Traveler]
     authTest: Boolean
+
+    # City
+    city(id: ID!): City
+    cities: [City]
   }
   type Mutation {
     registerAdmin(email: String!, password: String!, fullName: String!): Admin
     registerTraveler(email: String!, password: String!, fullName: String!): Traveler
+
+    # City
+    createCity(name: String!): City
   }
   type AdminLogin {
     user: Admin
@@ -40,6 +51,10 @@ export const schema = buildSchema(`
     id: ID
     fullName: String
     email: String
+  }
+  type City {
+    id: String
+    name: String
   }
 `);
 
@@ -83,6 +98,17 @@ export const rootValue = {
     return auth.getData();
   },
 
+  city: async ({ id }: CityParams, context: IContext) => {
+    const city = await City.getOne(id);
+    city.throwError(context);
+    return city.getData();
+  },
+  cities: async ({}, context: IContext) => {
+    const cities = await City.get();
+    cities.throwError(context);
+    return cities.getData();
+  },
+
   //mutations
   registerAdmin: async (
     { email, password, fullName }: RegisterAdminParams,
@@ -99,5 +125,16 @@ export const rootValue = {
     const register = await Traveler.register(email, password, fullName);
     register.throwError(context);
     return register.getData();
+  },
+
+  createCity: async ({ name }: CreateCityParams, context: IContext) => {
+    const isAdmin = Login.isAdmin(context);
+    isAdmin.throwError(context);
+
+    const city = await City.create(name);
+
+    city.throwError(context);
+
+    return city.getData();
   },
 };

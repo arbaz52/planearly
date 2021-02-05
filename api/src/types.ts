@@ -34,3 +34,11 @@ export interface RegisterTravelerParams {
   password: string;
   fullName: string;
 }
+
+export interface CityParams {
+  id: string;
+}
+
+export interface CreateCityParams {
+  name: string;
+}
