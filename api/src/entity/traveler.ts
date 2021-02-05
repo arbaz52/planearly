@@ -1,8 +1,9 @@
 import { Column, Entity, Index, PrimaryColumn } from "typeorm";
 import { v4 as uuid } from "uuid";
+import Login from "./login";
+
 import Result from "../model";
 import { Database } from "../utils";
-import Login from "./login";
 
 @Entity("traveler")
 export default class Traveler {

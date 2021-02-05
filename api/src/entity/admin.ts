@@ -1,6 +1,7 @@
 import { Column, Entity, Index, PrimaryColumn } from "typeorm";
 import { v4 as uuid } from "uuid";
 import Result from "../model";
+import { IContext } from "../types";
 import { Database } from "../utils";
 import Login from "./login";
 
@@ -41,7 +42,7 @@ export default class Admin {
     if (await db.save(newAdmin)) {
       return new Result<Admin>(newAdmin, 200);
     } else {
-      return new Result<Admin>(new Error("Account could not be created!"), 500);
+      return new Result<Error>(new Error("Account could not be created!"), 500);
     }
   }
 
@@ -55,10 +56,10 @@ export default class Admin {
         const _login = new Login(admin, true);
         return new Result<Login>(_login, 200);
       } else {
-        return new Result<Admin>(new Error("Incorrect password!"), 400);
+        return new Result<Error>(new Error("Incorrect password!"), 400);
       }
     } else {
-      return new Result<Admin>(new Error("Admin not found!"), 404);
+      return new Result<Error>(new Error("Admin not found!"), 404);
     }
   }
 

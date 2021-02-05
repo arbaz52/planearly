@@ -1,8 +1,11 @@
 import jwt from "jsonwebtoken";
-import { IToken } from "../types";
-import { JWT_ALGORITHM, JWT_EXPIRES_IN, JWT_SECRET } from "../utils";
 import Admin from "./admin";
 import Traveler from "./traveler";
+
+import Result from "../model";
+
+import { IContext, IToken } from "../types";
+import { JWT_ALGORITHM, JWT_EXPIRES_IN, JWT_SECRET } from "../utils";
 export default class Login {
   user: Admin | Traveler;
   token: string;
@@ -36,5 +39,19 @@ export default class Login {
       id: user.id,
       signedAt: new Date().valueOf(),
     };
+  }
+
+  static isAdmin(context: IContext) {
+    const { token } = context;
+    if (token) {
+      return new Result<boolean>(true, 200);
+    } else {
+      return new Result<Error>(
+        new Error(
+          "Authorization header missing or invalid authorization token passed."
+        ),
+        400
+      );
+    }
   }
 }

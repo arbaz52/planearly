@@ -1,7 +1,4 @@
 import { Request, Response } from "express";
-import Admin from "./entity/admin";
-import Login from "./entity/login";
-import Traveler from "./entity/traveler";
 export interface IToken {
   id: string;
   signedAt: number;

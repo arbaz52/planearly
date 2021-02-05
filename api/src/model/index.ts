@@ -1,3 +1,5 @@
+import { IContext } from "../types";
+
 export default class Result<T> {
   data: T | Error;
   status: number;
@@ -9,6 +11,10 @@ export default class Result<T> {
 
   isError() {
     return this.data instanceof Error;
+  }
+  throwError(context: IContext) {
+    context.res.status(this.status);
+    if (this.isError()) throw this.getError();
   }
   isData() {
     return !this.isError();

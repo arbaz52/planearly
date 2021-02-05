@@ -1,7 +1,7 @@
 import { buildSchema } from "graphql";
 import Admin from "../entity/admin";
+import Login from "../entity/login";
 import Traveler from "../entity/traveler";
-import Result from "../model";
 import {
   IContext,
   LoginAdminParams,
@@ -9,7 +9,6 @@ import {
   RegisterAdminParams,
   RegisterTravelerParams,
 } from "../types";
-import { adminOnly } from "../utils";
 
 export const schema = buildSchema(`
   type Query {
@@ -56,12 +55,12 @@ export const rootValue = {
     context: IContext
   ) => {
     const login = await Admin.login(email, password);
-    if (login.isError()) throw login.getError();
+    login.throwError(context);
     return login.getData();
   },
   admins: async ({}, context: IContext) => {
     const admins = await Admin.get();
-    if (admins.isError()) throw admins.getError();
+    admins.throwError(context);
     return admins.getData();
   },
 
@@ -70,16 +69,18 @@ export const rootValue = {
     context: IContext
   ) => {
     const login = await Traveler.login(email, password);
-    if (login.isError()) throw login.getError();
+    login.throwError(context);
     return login.getData();
   },
   travelers: async ({}, context: IContext) => {
     const travelers = await Traveler.get();
-    if (travelers.isError()) throw travelers.getError();
+    travelers.throwError(context);
     return travelers.getData();
   },
   authTest: ({}, context: IContext) => {
-    return adminOnly(context.token);
+    const auth = Login.isAdmin(context);
+    auth.throwError(context);
+    return auth.getData();
   },
 
   //mutations
@@ -88,7 +89,7 @@ export const rootValue = {
     context: IContext
   ) => {
     const register = await Admin.register(email, password, fullName);
-    if (register.isError()) throw register.getError();
+    register.throwError(context);
     return register.getData();
   },
   registerTraveler: async (
@@ -96,7 +97,7 @@ export const rootValue = {
     context: IContext
   ) => {
     const register = await Traveler.register(email, password, fullName);
-    if (register.isError()) throw register.getError();
+    register.throwError(context);
     return register.getData();
   },
 };
