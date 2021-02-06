@@ -19,7 +19,6 @@ const jwtExtract = (
       const decoded = jwt.decode(token) as IToken;
       _req.user = decoded;
     } catch (ex) {
-      console.log(req, res, next, authorization);
       console.error(ex);
     }
   }

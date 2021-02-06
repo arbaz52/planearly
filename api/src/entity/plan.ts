@@ -1,5 +1,7 @@
 import { Entity, ManyToOne, PrimaryColumn } from "typeorm";
-import lodash from "lodash";
+import find from "lodash/find";
+import reduce from "lodash/reduce";
+import filter from "lodash/filter";
 import { v4 as uuid } from "uuid";
 import Result from "../model";
 import { Database, dijkstra } from "../utils";
@@ -50,13 +52,13 @@ export default class Plan {
       if (flightsData.isData() && citiesData.isData()) {
         const flights = flightsData.getData() as Flight[];
         const cities = citiesData.getData() as City[];
-        const graph = lodash.reduce(
+        const graph = reduce(
           cities,
           (prev, curr) => {
-            const flightsFrom = lodash.filter(
+            const flightsFrom = filter(
               flights,
               (flight) =>
-                !!lodash.find(
+                !!find(
                   curr.flightsFrom,
                   (cityFlight) => cityFlight.id === flight.id
                 )
