@@ -3,11 +3,13 @@ import Admin from "../entity/admin";
 import City from "../entity/city";
 import Flight from "../entity/flight";
 import Login from "../entity/login";
+import Plan from "../entity/plan";
 import Traveler from "../entity/traveler";
 import {
   CityParams,
   CreateCityParams,
   CreateFlightParams,
+  GeneratePlanParams,
   IContext,
   LoginAdminParams,
   LoginTravelerParams,
@@ -31,6 +33,9 @@ export const schema = buildSchema(`
     # Flight
     flight(id: ID!): Flight
     flights: [Flight]
+
+    # FlightPlans | Plans
+    generatePlan(from: ID!, to: ID!): [Flight]
   }
   type Mutation {
     registerAdmin(email: String!, password: String!, fullName: String!): Admin
@@ -129,6 +134,9 @@ export const rootValue = {
     const flights = await Flight.get();
     flights.throwError(context);
     return flights.getData();
+  },
+  generatePlan: async ({ from, to }: GeneratePlanParams, context: IContext) => {
+    Plan.generate(from, to);
   },
 
   //mutations

@@ -1,6 +1,7 @@
 import { Column, Entity, Index, OneToMany, PrimaryColumn } from "typeorm";
 import { v4 as uuid } from "uuid";
 import Flight from "./flight";
+import Plan from "./plan";
 import Result from "../model";
 import { Database } from "../utils";
 
@@ -17,6 +18,12 @@ export default class City {
   flightsFrom!: Flight[];
   @OneToMany(() => Flight, (flight) => flight.to)
   flightsTo!: Flight[];
+
+  @OneToMany(() => Plan, (plan) => plan.from)
+  plansFrom!: Plan[];
+
+  @OneToMany(() => Plan, (plan) => plan.to)
+  plansTo!: Plan[];
 
   constructor(name: string) {
     this.id = uuid();

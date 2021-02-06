@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import Flight from "./entity/flight";
 export interface IToken {
   id: string;
   signedAt: number;
@@ -47,4 +48,20 @@ export interface CreateFlightParams {
   from: string;
   to: string;
   cost: number;
+}
+
+export interface GeneratePlanParams {
+  from: string;
+  to: string;
+}
+
+export interface Node {
+  cityId: string;
+  cost: number;
+  parent?: Flight;
+}
+
+//cities with departing flights.
+export interface Graph {
+  [cityId: string]: Flight[];
 }
