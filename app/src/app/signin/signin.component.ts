@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Traveler, TravelerService } from '../traveler.service';
 
 @Component({
@@ -16,7 +17,8 @@ export class SigninComponent implements OnInit {
 
   constructor(
     private travelerService: TravelerService,
-    formBuilder: FormBuilder
+    formBuilder: FormBuilder,
+    private router: Router
   ) {
     this.signIn = formBuilder.group({
       email: ['', [Validators.email, Validators.required]],
@@ -57,6 +59,7 @@ export class SigninComponent implements OnInit {
             loginTraveler: { token, user },
           } = ob.data;
           this.travelerService.toLocalStorage(user, token);
+          this.router.navigate(['/flight-plan']);
         }
         if (ob.errors) {
           this.error = ob.errors[0].message;

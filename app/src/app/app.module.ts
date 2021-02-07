@@ -14,6 +14,9 @@ import { SigninComponent } from './signin/signin.component';
 import { SignupComponent } from './signup/signup.component';
 import { SvgloaderComponent } from './svgloader/svgloader.component';
 import { FlightPlanComponent } from './flight-plan/flight-plan.component';
+import { FooterComponent } from './footer/footer.component';
+import { AdminLoginComponent } from './admin-login/admin-login.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +27,9 @@ import { FlightPlanComponent } from './flight-plan/flight-plan.component';
     SignupComponent,
     SvgloaderComponent,
     FlightPlanComponent,
+    FooterComponent,
+    AdminLoginComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,

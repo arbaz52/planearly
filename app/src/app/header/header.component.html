@@ -1,15 +1,14 @@
 <header>
   <div class="wrapper">
-    <div class="site-info">
+    <a class="site-info no-underline" routerLink="/">
       <h1 class="site-title">
         <img src="assets/logo.svg" class="logo" />
         <span>Plan</span>
         <span>early</span>
       </h1>
       <h4 class="tagline">Inexpensive Flight Plans.</h4>
-    </div>
+    </a>
     <nav [ngClass]="{ hidden: !displayNav }">
-      <a routerLink="/">Home</a>
       <a *ngIf="!isLoggedIn()" routerLink="/signin">Sign in</a>
       <a *ngIf="!isLoggedIn()" routerLink="/signup" class="btn no-underline"
         >Try for free</a

@@ -13,6 +13,7 @@
           <span class="accent"> free of cost forever</span>.
         </h4>
       </div>
+      <h3 *ngIf="error" class="text-danger">{{ error }}</h3>
       <form *ngIf="!data" [formGroup]="signUp" (ngSubmit)="handleSubmit()">
         <div class="form-control">
           <label for="">Full Name *</label>

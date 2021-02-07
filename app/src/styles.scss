@@ -74,6 +74,13 @@ app-flight-plan {
   flex-direction: column;
 }
 
+app-not-found {
+  overflow: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 h1 {
   font-size: 36px;
   font-weight: 800;

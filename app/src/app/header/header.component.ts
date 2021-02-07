@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { KEY_TOKEN, KEY_USER } from '../traveler.service';
 import jwtDecode from 'jwt-decode';
 import { i18nMetaToJSDoc } from '@angular/compiler/src/render3/view/i18n/meta';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -13,7 +14,7 @@ export class HeaderComponent implements OnInit {
   //hide nav by default for small screens.
   displayNav = false;
 
-  constructor() {
+  constructor(private router: Router) {
     const token = localStorage.getItem(KEY_TOKEN);
     if (token) {
       try {
@@ -38,6 +39,7 @@ export class HeaderComponent implements OnInit {
     console.log('logging out');
     localStorage.removeItem(KEY_TOKEN);
     localStorage.removeItem(KEY_USER);
+    this.router.navigate(['/signin']);
   }
   toggleNav() {
     this.displayNav = !this.displayNav;
