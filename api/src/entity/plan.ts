@@ -1,13 +1,17 @@
-import { Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
 import find from "lodash/find";
 import reduce from "lodash/reduce";
 import filter from "lodash/filter";
+
 import { v4 as uuid } from "uuid";
-import Result from "../model";
-import { Database, dijkstra } from "../utils";
-import { Graph } from "../types";
+
 import City from "./city";
 import Flight from "./flight";
+import Route from "./route";
+
+import Result from "../model";
+import { Graph } from "../types";
+import { Database, dijkstra } from "../utils";
 
 @Entity("plan")
 export default class Plan {
@@ -20,18 +24,40 @@ export default class Plan {
   @ManyToOne(() => City, (city) => city.plansTo)
   to!: City;
 
+  @OneToMany(() => Route, (route) => route.plan)
+  routes!: Route[];
+
   constructor() {
     this.id = uuid();
   }
 
   static async findPlan(from: string, to: string) {
     const db = new Database<Plan>(Plan);
-    return await db.findOne({
-      where: {
-        from,
-        to,
+    const plan = await db.findOne(
+      {
+        where: {
+          from,
+          to,
+        },
       },
-    });
+      ["from", "to"]
+    );
+    return plan;
+  }
+
+  static async get() {
+    const db = new Database<Plan>(Plan);
+    return new Result<Plan[]>(
+      await db.find({}, [
+        "from",
+        "to",
+        "routes",
+        "routes.flight",
+        "routes.flight.from",
+        "routes.flight.to",
+      ]),
+      200
+    );
   }
 
   /**
@@ -45,7 +71,15 @@ export default class Plan {
       return new Result<Plan>(plan, 200);
     } else {
       //generate flight plan and store it in the db.
-      // const plan = Plan.dijkstra(from, to);
+
+      //getting cities from db.....
+      const fromCity = await City.getOne(from);
+      const toCity = await City.getOne(to);
+
+      //returning the result<error> object.
+      if (fromCity.isError() || toCity.isError()) {
+        return (fromCity || toCity) as Result<Error>;
+      }
 
       const flightsData = await Flight.get();
       const citiesData = await City.get();
@@ -70,7 +104,44 @@ export default class Plan {
           },
           {} as Graph
         );
-        const plan = dijkstra(from, to, graph);
+        const plans = dijkstra(from, to, graph);
+        console.log(plans);
+
+        // saving the routes for future use.
+        const dbPlan = new Database<Plan>(Plan);
+        const storage = await Promise.all(
+          Object.keys(plans).map(async (cityId) => {
+            //storing empty routes so they do not get recalculated again.
+            const route = plans[cityId];
+            //store the plan
+            const newPlan = new Plan();
+            newPlan.from = fromCity.getData() as City;
+            const toCity = find(cities, (city) => city.id === cityId);
+            if (toCity) newPlan.to = toCity;
+            if (await dbPlan.save(newPlan)) {
+              //save each flight order
+              const storedRoutes = await Promise.all(
+                route.map(async (flight, index) => {
+                  console.log(newPlan, index, flight);
+                  const _route = await Route.create(newPlan, index, flight);
+                  return _route;
+                })
+              );
+              return { cityId, storedRoutes };
+            } else {
+              throw new Error("Could not create the path");
+            }
+          })
+        );
+
+        // returning the desired route.
+        const plan = await Plan.findPlan(from, to);
+        console.log(plan);
+        if (plan) {
+          return new Result<Plan>(plan, 200);
+        } else {
+          return new Result<Plan>(new Error("Flight Plan does not exist"), 404);
+        }
       }
     }
   }

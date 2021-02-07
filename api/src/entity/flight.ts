@@ -1,6 +1,9 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
-import City from "./city";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
 import { v4 as uuid } from "uuid";
+
+import City from "./city";
+import Route from "./route";
+
 import Result from "../model";
 import { Database } from "../utils";
 
@@ -9,14 +12,17 @@ export default class Flight {
   @PrimaryColumn()
   id: string;
 
-  @ManyToOne(() => City, (city) => city.flightsFrom)
+  @ManyToOne(() => City, (city) => city.flightsFrom, { eager: true })
   from: City;
 
-  @ManyToOne(() => City, (city) => city.flightsTo)
+  @ManyToOne(() => City, (city) => city.flightsTo, { eager: true })
   to: City;
 
   @Column({ nullable: false, type: "integer" })
   cost: number;
+
+  @OneToMany(() => Route, (route) => route.flight)
+  routes!: Route[];
 
   constructor(from: City, to: City, cost: number) {
     this.id = uuid();

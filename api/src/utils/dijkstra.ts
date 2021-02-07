@@ -3,7 +3,7 @@ import reduce from "lodash/reduce";
 import sortBy from "lodash/sortBy";
 
 import Flight from "../entity/flight";
-import { Graph, Node } from "../types";
+import { Graph, Node, Routes } from "../types";
 
 export const dijkstra = (from: string, to: string, graph: Graph) => {
   const explored: Node[] = [];
@@ -68,7 +68,3 @@ export const dijkstra = (from: string, to: string, graph: Graph) => {
   );
   return routes;
 };
-
-export interface Routes {
-  [cityId: string]: Flight[];
-}

@@ -65,3 +65,7 @@ export interface Node {
 export interface Graph {
   [cityId: string]: Flight[];
 }
+
+export interface Routes {
+  [cityId: string]: Flight[];
+}

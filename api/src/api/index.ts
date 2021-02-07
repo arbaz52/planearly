@@ -35,7 +35,8 @@ export const schema = buildSchema(`
     flights: [Flight]
 
     # FlightPlans | Plans
-    generatePlan(from: ID!, to: ID!): [Flight]
+    generatePlan(from: ID!, to: ID!): Plan
+    plans: [Plan]
   }
   type Mutation {
     registerAdmin(email: String!, password: String!, fullName: String!): Admin
@@ -76,7 +77,17 @@ export const schema = buildSchema(`
     from: City
     to: City
     cost: Int
-
+  }
+  type Plan {
+    id: ID
+    from: City
+    to: City
+    routes: [Route]
+  }
+  type Route {
+    id: ID
+    order: Int
+    flight: Flight
   }
 `);
 
@@ -136,7 +147,19 @@ export const rootValue = {
     return flights.getData();
   },
   generatePlan: async ({ from, to }: GeneratePlanParams, context: IContext) => {
-    Plan.generate(from, to);
+    const plan = await Plan.generate(from, to);
+    if (plan) {
+      plan.throwError(context);
+      return plan;
+    } else {
+      context.res.status(404);
+      throw new Error("Flight plan does not exist");
+    }
+  },
+  plans: async ({}, context: IContext) => {
+    const plans = await Plan.get();
+    plans.throwError(context);
+    return plans.getData();
   },
 
   //mutations

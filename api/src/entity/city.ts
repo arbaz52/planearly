@@ -1,7 +1,16 @@
-import { Column, Entity, Index, OneToMany, PrimaryColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  getManager,
+  Index,
+  OneToMany,
+  PrimaryColumn,
+} from "typeorm";
 import { v4 as uuid } from "uuid";
+
 import Flight from "./flight";
 import Plan from "./plan";
+
 import Result from "../model";
 import { Database } from "../utils";
 
@@ -32,8 +41,15 @@ export default class City {
 
   static async get() {
     const db = new Database<City>(City);
-    const cities = await db.find({}, ["flightsFrom", "flightsTo"]);
+    const cities = await db.find({}, [
+      "flightsFrom",
+      "flightsTo",
+      "flightsFrom.from",
+      "flightsFrom.to",
+    ]);
     return new Result<City[]>(cities, 200);
+
+    getManager().getRepository(City).find();
   }
   static async getOne(id: string) {
     const db = new Database<City>(City);
