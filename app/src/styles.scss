@@ -9,6 +9,7 @@
 
   --disabled-bg: #ccc;
   --disabled-text: #888;
+  --secondary-text: #8a8a8a;
 
   // breakpoints
   --xs: 0;
@@ -34,6 +35,11 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
+}
+.text- {
+  &secondary {
+    color: var(--secondary-text);
+  }
 }
 
 app-root {
@@ -107,6 +113,19 @@ h5 {
 
   &-1 {
     margin: 4px;
+  }
+  &b {
+    &-0 {
+      margin-bottom: 0;
+    }
+  }
+  &t {
+    &-0 {
+      margin-top: 0;
+    }
+    &-2 {
+      margin-top: 8px;
+    }
   }
 }
 .btn {
@@ -213,4 +232,9 @@ form {
   gap: 12px;
   margin-top: 48px;
   margin-bottom: 12px;
+}
+
+.text-loading {
+  display: flex;
+  gap: 12px;
 }

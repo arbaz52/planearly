@@ -9,7 +9,11 @@
         <h1>Let's create a flight plan.</h1>
         <h4>Select origin and destination.</h4>
       </div>
-      <form [formGroup]="pickFlights" class="selects">
+      <form
+        [formGroup]="pickFlights"
+        (ngSubmit)="handleSubmit()"
+        class="selects"
+      >
         <div class="form-control">
           <label for="">Origin</label>
           <select formControlName="origin">
@@ -31,10 +35,48 @@
         <div class="form-control">
           <label for="">&nbsp;</label>
           <button class="btn fat-btn" [disabled]="!isValid()">
+            <img src="assets/flight.svg" class="icon" />
             Generate Flight Plan
           </button>
         </div>
       </form>
+      <h4 class="text-loading" *ngIf="loadingPlan">
+        <img src="/assets/loading.svg" class="spinner" alt="" />
+        Please wait, generating flight plan.
+      </h4>
+      <!-- <h4 *ngIf="!plan" class="text-danger">Flight plan does not exist</h4> -->
+      <h4 *ngIf="plan && plan.routes.length == 0" class="text-danger">
+        No route exists between the cities.
+      </h4>
+
+      <div class="result" *ngIf="plan && plan.routes.length > 0">
+        <div class="result-heading">
+          <h2 class="mb-0">
+            Flight Plan from {{ plan.from.name }} to
+            {{ plan.to.name }}
+          </h2>
+          <h4 class="text-secondary mt-2">
+            {{ plan.routes.length }} Flights,
+            {{ plan.routes.length + 1 }} Cities.
+          </h4>
+        </div>
+        <div class="flights">
+          <div class="flight" *ngFor="let route of plan.routes">
+            <h3 class="cost mb-0">
+              {{ route.flight.cost | currency: "PKR" + " " }}
+            </h3>
+            <p class="text-secondary mt-0">
+              {{ route.flight.from.name }} - {{ route.flight.to.name }}
+            </p>
+          </div>
+        </div>
+        <div class="cost">
+          <h4 class="text-secondary mb-0">Estimated Cost</h4>
+          <h1 class="mt-0 mb-0">
+            {{ getEstimatedCost() | currency: "PKR" + " " }}
+          </h1>
+        </div>
+      </div>
     </div>
   </div>
 </div>
