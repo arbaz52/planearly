@@ -1,4 +1,11 @@
-import { Column, Entity, ManyToOne, OneToOne, PrimaryColumn } from "typeorm";
+import {
+  Column,
+  Db,
+  Entity,
+  ManyToOne,
+  OneToOne,
+  PrimaryColumn,
+} from "typeorm";
 import { v4 as uuid } from "uuid";
 import Result from "../model";
 import { Database } from "../utils";
@@ -37,5 +44,13 @@ export default class Route {
     } else {
       return new Result<Error>(new Error("Could not create the route"), 500);
     }
+  }
+
+  /**
+   * won't be exposed as api endpoint
+   */
+  async remove() {
+    const db = new Database<Route>(Route);
+    return await db.remove(this);
   }
 }

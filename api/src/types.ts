@@ -69,3 +69,23 @@ export interface Graph {
 export interface Routes {
   [cityId: string]: Flight[];
 }
+
+export interface UpdateCityParams {
+  id: string;
+  name: string;
+}
+
+export interface RemoveCityParams {
+  id: string;
+}
+
+export interface UpdateFlightParams {
+  id: string;
+  from: string;
+  to: string;
+  cost: number;
+}
+
+export interface RemoveFlightParams {
+  id: string;
+}

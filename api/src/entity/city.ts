@@ -48,14 +48,14 @@ export default class City {
       "flightsFrom.to",
     ]);
     return new Result<City[]>(cities, 200);
-
-    getManager().getRepository(City).find();
   }
   static async getOne(id: string) {
     const db = new Database<City>(City);
     const city = await db.findOne({ where: { id } }, [
       "flightsFrom",
       "flightsTo",
+      "flightsFrom.from",
+      "flightsFrom.to",
     ]);
     if (city) return new Result<City>(city, 200);
     return new Result<Error>(new Error("City not found"), 404);
@@ -73,12 +73,34 @@ export default class City {
     }
   }
 
-  /**
-   * TODO: complete
-   */
-  async update() {
+  static async update(id: string, name: string) {
     const db = new Database<City>(City);
-    const { id, ...rest } = this.toJson();
+    const city = new City(name);
+    city.id = id;
+    if (await db.save(city)) {
+      return new Result<City>(city, 200);
+    } else {
+      return new Result<Error>(new Error("Could not update the city"), 500);
+    }
+  }
+
+  static async remove(id: string) {
+    const db = new Database<City>(City);
+    const city = await db.findOne({
+      where: {
+        id,
+      },
+    });
+    if (city) {
+      await Plan.removeAll();
+      await Flight.removeFlightsForCity(city.id);
+      if (db.remove(city)) {
+        return new Result<boolean>(true, 200);
+      }
+      return new Result<Error>(new Error("City could not be removed"), 500);
+    } else {
+      return new Result<Error>(new Error("City not found"), 404);
+    }
   }
 
   toJson(): { id: string; name: string } {

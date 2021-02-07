@@ -2,6 +2,7 @@ import { Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
 import find from "lodash/find";
 import reduce from "lodash/reduce";
 import filter from "lodash/filter";
+import every from "lodash/every";
 
 import { v4 as uuid } from "uuid";
 
@@ -40,7 +41,14 @@ export default class Plan {
           to,
         },
       },
-      ["from", "to"]
+      [
+        "from",
+        "to",
+        "routes",
+        "routes.flight",
+        "routes.flight.from",
+        "routes.flight.to",
+      ]
     );
     return plan;
   }
@@ -60,16 +68,52 @@ export default class Plan {
     );
   }
 
+  async remove() {
+    const db = new Database<Plan>(Plan);
+    //remove routes first.
+    await Promise.all(this.routes.map(async (route) => await route.remove()));
+    if (db.remove(this)) {
+      return;
+    }
+
+    if (await db.remove(this)) {
+      return new Result<boolean>(true, 200);
+    } else {
+      return new Result<Error>(new Error("Could not update the flight"), 500);
+    }
+  }
+  static async removeAll() {
+    const plans = await Plan.get();
+    if (plans.isData()) {
+      if (
+        every(
+          await Promise.all(
+            (plans.getData() as Plan[]).map(async (plan) => await plan.remove())
+          )
+        )
+      ) {
+        return new Result<boolean>(true, 200);
+      } else {
+        return new Result<Error>(
+          new Error("Not all of the plans were deleted"),
+          500
+        );
+      }
+    }
+    return new Result<Error>(plans.getError() as Error, plans.status);
+  }
   /**
    * check if straight flight plan exits.
    * check if a plan already exits.
    * if nothing, generate one and store it.
    */
   static async generate(from: string, to: string) {
+    //look for the plan, if it already exists, return that.
     const plan = await Plan.findPlan(from, to);
     if (plan) {
       return new Result<Plan>(plan, 200);
     } else {
+      //this does:
       //generate flight plan and store it in the db.
 
       //getting cities from db.....
@@ -109,7 +153,7 @@ export default class Plan {
 
         // saving the routes for future use.
         const dbPlan = new Database<Plan>(Plan);
-        const storage = await Promise.all(
+        await Promise.all(
           Object.keys(plans).map(async (cityId) => {
             //storing empty routes so they do not get recalculated again.
             const route = plans[cityId];
@@ -119,17 +163,15 @@ export default class Plan {
             const toCity = find(cities, (city) => city.id === cityId);
             if (toCity) newPlan.to = toCity;
             if (await dbPlan.save(newPlan)) {
-              //save each flight order
-              const storedRoutes = await Promise.all(
+              //save each flight in-order
+              return await Promise.all(
                 route.map(async (flight, index) => {
                   console.log(newPlan, index, flight);
-                  const _route = await Route.create(newPlan, index, flight);
-                  return _route;
+                  return await Route.create(newPlan, index, flight);
                 })
               );
-              return { cityId, storedRoutes };
             } else {
-              throw new Error("Could not create the path");
+              console.error(new Error("Could not create the path"));
             }
           })
         );
@@ -142,6 +184,11 @@ export default class Plan {
         } else {
           return new Result<Plan>(new Error("Flight Plan does not exist"), 404);
         }
+      } else {
+        return new Result<Error>(
+          new Error("One or both cities do not exist"),
+          400
+        );
       }
     }
   }

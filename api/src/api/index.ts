@@ -15,6 +15,10 @@ import {
   LoginTravelerParams,
   RegisterAdminParams,
   RegisterTravelerParams,
+  RemoveCityParams,
+  RemoveFlightParams,
+  UpdateCityParams,
+  UpdateFlightParams,
 } from "../types";
 
 export const schema = buildSchema(`
@@ -44,9 +48,13 @@ export const schema = buildSchema(`
 
     # City
     createCity(name: String!): City
+    updateCity(id: ID!, name: String!): City
+    removeCity(id: ID!): Boolean
 
     # Flight
-    createFlight(from: String!, to: String!, cost: Int!): Flight
+    createFlight(from: ID!, to: ID!, cost: Int!): Flight
+    updateFlight(id: ID!, from: ID!, to: ID!, cost: Int!): Flight
+    removeFlight(id: ID!): Boolean
   }
   type AdminLogin {
     user: Admin
@@ -148,13 +156,8 @@ export const rootValue = {
   },
   generatePlan: async ({ from, to }: GeneratePlanParams, context: IContext) => {
     const plan = await Plan.generate(from, to);
-    if (plan) {
-      plan.throwError(context);
-      return plan;
-    } else {
-      context.res.status(404);
-      throw new Error("Flight plan does not exist");
-    }
+    plan.throwError(context);
+    return plan.getData();
   },
   plans: async ({}, context: IContext) => {
     const plans = await Plan.get();
@@ -190,6 +193,23 @@ export const rootValue = {
 
     return city.getData();
   },
+  updateCity: async ({ id, name }: UpdateCityParams, context: IContext) => {
+    const isAdmin = Login.isAdmin(context);
+    isAdmin.throwError(context);
+
+    const city = await City.update(id, name);
+    city.throwError(context);
+
+    return city.getData();
+  },
+  removeCity: async ({ id }: RemoveCityParams, context: IContext) => {
+    const isAdmin = Login.isAdmin(context);
+    isAdmin.throwError(context);
+
+    const removed = await City.remove(id);
+    removed.throwError(context);
+    return removed.getData();
+  },
 
   createFlight: async (
     { cost, from, to }: CreateFlightParams,
@@ -203,5 +223,25 @@ export const rootValue = {
     flight.throwError(context);
 
     return flight.getData();
+  },
+  updateFlight: async (
+    { id, from, to, cost }: UpdateFlightParams,
+    context: IContext
+  ) => {
+    const isAdmin = Login.isAdmin(context);
+    isAdmin.throwError(context);
+
+    const flight = await Flight.update(id, from, to, cost);
+    flight.throwError(context);
+
+    return flight.getData();
+  },
+  removeFlight: async ({ id }: RemoveFlightParams, context: IContext) => {
+    const isAdmin = Login.isAdmin(context);
+    isAdmin.throwError(context);
+
+    const removed = await Flight.remove(id);
+    removed.throwError(context);
+    return removed.getData();
   },
 };
