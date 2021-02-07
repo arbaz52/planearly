@@ -15,17 +15,51 @@
     margin-right: 8px;
     align-self: center;
   }
+  .tagline {
+    @media (max-width: 1000px) {
+      display: none;
+    }
+  }
+  @media (max-width: 700px) {
+    order: -1;
+  }
 }
 
 header .wrapper {
   @extend .wrapper;
+  padding-bottom: 12px;
+  padding-top: 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  @media (max-width: 700px) {
+    flex-wrap: wrap;
+  }
+  .burger {
+    display: none;
+    cursor: pointer;
+    @media (max-width: 700px) {
+      display: block;
+      order: -1;
+    }
+  }
 }
 
 nav {
   display: flex;
   gap: 24px;
   align-items: center;
+
+  &.hidden {
+    @media (max-width: 700px) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 700px) {
+    margin-top: 24px;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 100%;
+  }
 }

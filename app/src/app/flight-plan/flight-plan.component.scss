@@ -25,7 +25,7 @@ select {
   display: flex;
   gap: 16px;
 
-  @media (max-width: 550px) {
+  @media (max-width: 750px) {
     flex-direction: column;
     align-items: stretch;
     width: 100%;
@@ -42,9 +42,13 @@ select {
   flex: 1;
   display: flex;
   overflow: auto;
+  border-bottom: 24px solid transparent;
   .content {
     display: flex;
     flex-direction: column;
+    @media (max-width: 850px) {
+      flex: 1;
+    }
   }
   .wrapper {
     margin-top: 20px;

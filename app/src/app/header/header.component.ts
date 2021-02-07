@@ -10,6 +10,9 @@ import { i18nMetaToJSDoc } from '@angular/compiler/src/render3/view/i18n/meta';
 })
 export class HeaderComponent implements OnInit {
   decodedToken: Token;
+  //hide nav by default for small screens.
+  displayNav = false;
+
   constructor() {
     const token = localStorage.getItem(KEY_TOKEN);
     if (token) {
@@ -35,6 +38,9 @@ export class HeaderComponent implements OnInit {
     console.log('logging out');
     localStorage.removeItem(KEY_TOKEN);
     localStorage.removeItem(KEY_USER);
+  }
+  toggleNav() {
+    this.displayNav = !this.displayNav;
   }
 
   ngOnInit(): void {}

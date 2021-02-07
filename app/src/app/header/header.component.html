@@ -6,9 +6,9 @@
         <span>Plan</span>
         <span>early</span>
       </h1>
-      <h4>Inexpensive Flight Plans.</h4>
+      <h4 class="tagline">Inexpensive Flight Plans.</h4>
     </div>
-    <nav>
+    <nav [ngClass]="{ hidden: !displayNav }">
       <a routerLink="/">Home</a>
       <a *ngIf="!isLoggedIn()" routerLink="/signin">Sign in</a>
       <a *ngIf="!isLoggedIn()" routerLink="/signup" class="btn no-underline"
@@ -26,5 +26,6 @@
         Flight Plans
       </a>
     </nav>
+    <img (click)="toggleNav()" src="assets/burger.svg" class="burger" />
   </div>
 </header>
