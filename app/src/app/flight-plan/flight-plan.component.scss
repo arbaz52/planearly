@@ -1,0 +1,54 @@
+select {
+  padding: 13px 8px;
+  background-color: #f5f5f5;
+  border: 1px solid transparent;
+  min-width: 200px;
+  ::placeholder {
+    color: #6c757d;
+  }
+  &.invalid {
+    border: 1px solid red;
+  }
+
+  background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position-x: 100%;
+  background-position-y: 8px;
+  appearance: none;
+
+  & option {
+    padding: 8px;
+  }
+}
+
+.selects {
+  display: flex;
+  gap: 16px;
+}
+
+.fat-btn {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.container {
+  flex: 1;
+  display: flex;
+  .wrapper {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex: 1;
+    gap: 16px;
+    aside {
+      flex: 1;
+      height: 100%;
+      background: url("./../../assets/da-pinchi.svg");
+      background-position: top left;
+      background-size: auto;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 24px;
+    }
+  }
+}

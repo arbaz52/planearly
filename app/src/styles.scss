@@ -3,9 +3,12 @@
 :root {
   // colors
   --accent: #fd79a8;
-  $accent: var(--accent);
   --link: #007bff;
   --accent-dark: #c5597f;
+  --danger: #dc3545;
+
+  --disabled-bg: #ccc;
+  --disabled-text: #888;
 
   // breakpoints
   --xs: 0;
@@ -40,7 +43,25 @@ app-root {
   display: flex;
   flex-direction: column;
 }
+app-home {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 app-signin {
+  overflow: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+app-signup {
+  overflow: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+app-flight-plan {
   overflow: auto;
   flex: 1;
   display: flex;
@@ -50,6 +71,9 @@ app-signin {
 h1 {
   font-size: 36px;
   font-weight: 800;
+  @media (max-width: 500px) {
+    font-size: 20px;
+  }
 }
 h2 {
   font-size: 24px;
@@ -91,10 +115,24 @@ h5 {
   font-weight: 700;
   background-color: var(--accent);
   padding: 10px 50px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+
   &:hover {
     background: var(--accent-dark);
     cursor: pointer;
   }
+  &:disabled {
+    background: var(--disabled-bg);
+    color: var(--disabled-text);
+    cursor: not-allowed;
+  }
+}
+.text-danger {
+  color: var(--danger);
 }
 
 a {
@@ -104,6 +142,7 @@ a {
 
   &:hover {
     text-decoration: underline;
+    cursor: pointer;
   }
 }
 
@@ -113,6 +152,10 @@ a {
 
 form {
   min-width: min(100%, 450px);
+  .text-danger {
+    text-align: left;
+    font-size: 11px;
+  }
   label,
   label * {
     font-size: 12px;
@@ -120,11 +163,14 @@ form {
   }
 
   input {
-    padding: 15px 10px;
+    padding: 13px 8px;
     background-color: #f5f5f5;
-    border: unset;
+    border: 1px solid transparent;
     ::placeholder {
       color: #6c757d;
+    }
+    &.invalid {
+      border: 1px solid red;
     }
   }
 
@@ -135,4 +181,36 @@ form {
     flex-direction: column;
     gap: 6px;
   }
+}
+
+.spinner {
+  width: 12px;
+  animation: rotation 1s infinite linear;
+}
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+.icon {
+  width: 12px;
+}
+
+.logo {
+  height: 30px;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  & * {
+    margin: 0;
+  }
+  gap: 12px;
+  margin-top: 48px;
+  margin-bottom: 12px;
 }

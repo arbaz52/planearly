@@ -13,7 +13,7 @@ export default class Result<T> {
     return this.data instanceof Error;
   }
   throwError(context: IContext) {
-    context.res.status(this.status);
+    // context.res.status(this.status);
     if (this.isError()) throw this.getError();
   }
   isData() {

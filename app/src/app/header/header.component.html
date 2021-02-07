@@ -2,14 +2,29 @@
   <div class="wrapper">
     <div class="site-info">
       <h1 class="site-title">
+        <img src="assets/logo.svg" class="logo" />
         <span>Plan</span>
         <span>early</span>
       </h1>
       <h4>Inexpensive Flight Plans.</h4>
     </div>
     <nav>
-      <a routerLink="/signin">Sign in</a>
-      <button class="btn">Try for free</button>
+      <a routerLink="/">Home</a>
+      <a *ngIf="!isLoggedIn()" routerLink="/signin">Sign in</a>
+      <a *ngIf="!isLoggedIn()" routerLink="/signup" class="btn no-underline"
+        >Try for free</a
+      >
+      <a *ngIf="isLoggedIn()" (click)="logout()" class="no-underline">
+        Sign out
+      </a>
+      <a
+        *ngIf="isLoggedIn()"
+        routerLink="/flight-plan"
+        class="btn no-underline"
+      >
+        <img src="assets/flight.svg" class="icon" />
+        Flight Plans
+      </a>
     </nav>
   </div>
 </header>

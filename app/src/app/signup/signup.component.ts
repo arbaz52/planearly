@@ -3,32 +3,40 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Traveler, TravelerService } from '../traveler.service';
 
 @Component({
-  selector: 'app-signin',
-  templateUrl: './signin.component.html',
-  styleUrls: ['./signin.component.scss'],
+  selector: 'app-signup',
+  templateUrl: './signup.component.html',
+  styleUrls: ['./signup.component.scss'],
 })
-export class SigninComponent implements OnInit {
+export class SignupComponent implements OnInit {
   submitting: boolean;
   error: string;
   data: Traveler;
 
-  signIn: FormGroup;
+  signUp: FormGroup;
 
   constructor(
     private travelerService: TravelerService,
     formBuilder: FormBuilder
   ) {
-    this.signIn = formBuilder.group({
+    this.signUp = formBuilder.group({
+      fullName: ['', [Validators.required]],
       email: ['', [Validators.email, Validators.required]],
       password: ['', [Validators.required]],
     });
   }
 
+  getFullName() {
+    return this.signUp.get('fullName');
+  }
   getEmail() {
-    return this.signIn.get('email');
+    return this.signUp.get('email');
   }
   getPassword() {
-    return this.signIn.get('password');
+    return this.signUp.get('password');
+  }
+
+  isFullNameInvalid() {
+    return this.getFullName().invalid && this.getFullName().touched;
   }
 
   isEmailInvalid() {
@@ -39,24 +47,23 @@ export class SigninComponent implements OnInit {
   }
 
   isValid() {
-    console.log(this.signIn.valid);
-    return this.signIn.valid;
+    console.log(this.signUp.valid);
+    return this.signUp.valid;
   }
 
   async handleSubmit() {
     this.submitting = true;
     this.error = undefined;
     this.data = undefined;
-    const [email, password] = [this.getEmail().value, this.getPassword().value];
-    this.travelerService.signin(email, password).subscribe(
+    const [fullName, email, password] = [
+      this.getFullName().value,
+      this.getEmail().value,
+      this.getPassword().value,
+    ];
+    this.travelerService.signup(fullName, email, password).subscribe(
       (ob) => {
         if (ob.data) {
-          console.log(ob.data);
-          this.data = ob.data.loginTraveler.user;
-          const {
-            loginTraveler: { token, user },
-          } = ob.data;
-          this.travelerService.toLocalStorage(user, token);
+          this.data = ob.data.registerTraveler;
         }
         if (ob.errors) {
           this.error = ob.errors[0].message;

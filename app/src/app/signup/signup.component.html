@@ -3,14 +3,31 @@
   <div class="wrapper">
     <div class="content">
       <div class="headings">
-        <h1 class="m-0">Welcome back!</h1>
+        <h1 class="m-0">
+          Let's start with creating a
+          <span class="accent">Traveler account</span>.
+        </h1>
         <h4 class="m-1 subheading">
-          Another trip! I like that. Let’s sprinkle some homemade suggestions.
+          We only require basic information about you, this motivates us seeing
+          how many people are using our services, which are and will be
+          <span class="accent"> free of cost forever</span>.
         </h4>
       </div>
-
-      <h3 *ngIf="error" class="text-danger">{{ error }}</h3>
-      <form [formGroup]="signIn" (ngSubmit)="handleSubmit()">
+      <form *ngIf="!data" [formGroup]="signUp" (ngSubmit)="handleSubmit()">
+        <div class="form-control">
+          <label for="">Full Name *</label>
+          <input
+            [ngClass]="{
+              invalid: isFullNameInvalid()
+            }"
+            formControlName="fullName"
+            type="text"
+            placeholder="E.g. John Doe"
+          />
+          <span *ngIf="isFullNameInvalid()" class="text-danger"
+            >Full Name is required</span
+          >
+        </div>
         <div class="form-control">
           <label for="">Email Address *</label>
           <input
@@ -39,8 +56,8 @@
         </div>
         <div class="form-control">
           <label for="" class="m-1"
-            >Don't have an account?
-            <a routerLink="/signup">Click here to create one.</a></label
+            >Already have an account?
+            <a routerLink="/signin">Click here to Sign in.</a></label
           >
           <button
             [disabled]="!isValid() || submitting"
@@ -48,10 +65,13 @@
             type="submit"
           >
             <img class="spinner" *ngIf="submitting" src="assets/loading.svg" />
-            Sign in!
+            Sign me up!
           </button>
         </div>
       </form>
+      <h3 *ngIf="data">
+        All done, <a routerLink="/signin">Click here to login</a>
+      </h3>
     </div>
   </div>
 </div>

@@ -1,0 +1,40 @@
+<app-header></app-header>
+<div class="container">
+  <div class="wrapper">
+    <aside title="I Present to you, Da Pinchi">
+      <h4>Da Pinchi, 1876</h4>
+    </aside>
+    <div class="content">
+      <div class="heading">
+        <h1>Let's create a flight plan.</h1>
+        <h4>Select origin and destination.</h4>
+      </div>
+      <form [formGroup]="pickFlights" class="selects">
+        <div class="form-control">
+          <label for="">Origin</label>
+          <select formControlName="origin">
+            <option disabled value="" selected>Select Origin</option>
+            <option *ngFor="let city of cities" [value]="city.id">
+              {{ city.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-control">
+          <label for="">Destination</label>
+          <select formControlName="destination">
+            <option disabled value="" selected>Select Destination</option>
+            <option *ngFor="let city of cities" [value]="city.id">
+              {{ city.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-control">
+          <label for="">&nbsp;</label>
+          <button class="btn fat-btn" [disabled]="!isValid()">
+            Generate Flight Plan
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
