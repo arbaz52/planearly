@@ -1,0 +1,26 @@
+@import "../../styles.scss";
+
+.site-title {
+  & span:last-child {
+    color: var(--accent);
+  }
+}
+
+.site-info {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+header .wrapper {
+  @extend .wrapper;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+nav {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
