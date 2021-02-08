@@ -9,7 +9,12 @@
       <h4 class="tagline">Inexpensive Flight Plans.</h4>
     </a>
     <nav [ngClass]="{ hidden: !displayNav }">
-      <a *ngIf="!isLoggedIn()" routerLink="/signin">Sign in</a>
+      <a
+        *ngIf="!isLoggedIn() || (decodedToken && decodedToken.isAdmin)"
+        routerLink="/dashboard"
+        >Dashboard</a
+      >
+      <a *ngIf="!isLoggedIn()" routerLink="/signin">Sign in as Traveler</a>
       <a *ngIf="!isLoggedIn()" routerLink="/signup" class="btn no-underline"
         >Try for free</a
       >

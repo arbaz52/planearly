@@ -1,0 +1,7 @@
+.content {
+  display: flex;
+  gap: 24px;
+  > * {
+    flex: 1;
+  }
+}

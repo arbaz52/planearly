@@ -9,6 +9,7 @@ import {
   CityParams,
   CreateCityParams,
   CreateFlightParams,
+  FlightParams,
   GeneratePlanParams,
   IContext,
   LoginAdminParams,
@@ -148,6 +149,11 @@ export const rootValue = {
     const cities = await City.get();
     cities.throwError(context);
     return cities.getData();
+  },
+  flight: async ({ id }: FlightParams, context: IContext) => {
+    const flights = await Flight.getOne(id);
+    flights.throwError(context);
+    return flights.getData();
   },
   flights: async ({}, context: IContext) => {
     const flights = await Flight.get();

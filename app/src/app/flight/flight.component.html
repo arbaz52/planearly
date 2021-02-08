@@ -1,0 +1,8 @@
+<a
+  class="flight"
+  routerLink="/dashboard/flights/{{ flight.id }}"
+  routerLinkActive="selected"
+>
+  {{ flight.from.name }} - {{ flight.to.name }}
+  <div class="cost">({{ flight.cost | currency: "PKR" + " " }})</div>
+</a>

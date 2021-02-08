@@ -39,6 +39,9 @@ export interface RegisterTravelerParams {
 export interface CityParams {
   id: string;
 }
+export interface FlightParams {
+  id: string;
+}
 
 export interface CreateCityParams {
   name: string;

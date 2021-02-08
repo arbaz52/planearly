@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminAuthGuard } from './admin-auth.guard';
+import { AdminLoginComponent } from './admin-login/admin-login.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { FlightPlanComponent } from './flight-plan/flight-plan.component';
 import { HomeComponent } from './home/home.component';
 import { NotFoundComponent } from './not-found/not-found.component';
@@ -22,6 +25,25 @@ const routes: Routes = [
   {
     path: 'flight-plan',
     component: FlightPlanComponent,
+  },
+  {
+    path: 'admin-login',
+    component: AdminLoginComponent,
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [AdminAuthGuard],
+  },
+  {
+    path: 'dashboard/:entity',
+    component: DashboardComponent,
+    canActivate: [AdminAuthGuard],
+  },
+  {
+    path: 'dashboard/:entity/:id',
+    component: DashboardComponent,
+    canActivate: [AdminAuthGuard],
   },
   {
     path: '**',

@@ -1,0 +1,38 @@
+<div class="content">
+  <form [formGroup]="editCity" (ngSubmit)="updateThis()">
+    <div class="heading">
+      <h1>City</h1>
+      <h2>{{ cityDetails.name }}</h2>
+    </div>
+    <div class="form-control">
+      <label>Name</label>
+      <input formControlName="name" type="text" placeholder="City Name" />
+      <span *ngIf="getName().invalid && getName().touched" class="text-danger"
+        >Name is required</span
+      >
+    </div>
+    <div class="form-control d-flex dir-row">
+      <button
+        type="save"
+        class="btn"
+        [disabled]="editCity.invalid || cityDetails.name === getName().value"
+      >
+        Update
+      </button>
+      <button type="button" class="btn bg-danger" (click)="removeThis()">
+        Remove
+      </button>
+    </div>
+  </form>
+  <div class="more-info">
+    <div class="heading">
+      <h1>Flights</h1>
+      <h2>Departing Flights</h2>
+      <app-flights-list [flights]="cityDetails.flightsFrom"></app-flights-list>
+      <br />
+      <h2>Arriving Flights</h2>
+      <app-flights-list [flights]="cityDetails.flightsTo"></app-flights-list>
+      <br />
+    </div>
+  </div>
+</div>

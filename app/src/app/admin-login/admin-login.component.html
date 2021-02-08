@@ -1,1 +1,51 @@
-<p>admin-login works!</p>
+<app-header></app-header>
+<div class="container">
+  <div class="wrapper">
+    <div class="content">
+      <div class="headings">
+        <h1 class="m-0">Hey there Admin!</h1>
+        <h4 class="m-1 subheading">Good to see to back!</h4>
+      </div>
+
+      <h3 *ngIf="error" class="text-danger">{{ error }}</h3>
+      <form [formGroup]="signIn" (ngSubmit)="handleSubmit()">
+        <div class="form-control">
+          <label for="">Email Address *</label>
+          <input
+            [ngClass]="{ invalid: isEmailInvalid() }"
+            formControlName="email"
+            required
+            type="email"
+            placeholder="E.g. example@website.com"
+          />
+          <span *ngIf="isEmailInvalid()" class="text-danger"
+            >Email is required</span
+          >
+        </div>
+        <div class="form-control">
+          <label for="">Password *</label>
+          <input
+            [ngClass]="{ invalid: isPasswordInvalid() }"
+            formControlName="password"
+            required
+            type="password"
+            placeholder="E.g. ***************"
+          />
+          <span *ngIf="isPasswordInvalid()" class="text-danger"
+            >Password is required</span
+          >
+        </div>
+        <div class="form-control">
+          <button
+            [disabled]="!isValid() || submitting"
+            class="btn"
+            type="submit"
+          >
+            <img class="spinner" *ngIf="submitting" src="assets/loading.svg" />
+            Sign in!
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

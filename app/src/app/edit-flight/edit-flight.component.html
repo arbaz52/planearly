@@ -1,0 +1,65 @@
+<div class="content">
+  <div *ngIf="flight">
+    <div class="heading">
+      <h3>Flight</h3>
+      <h2>
+        <a routerLink="/dashboard/cities/{{ flight.from.id }}">{{
+          flight.from.name
+        }}</a>
+        -
+        <a routerLink="/dashboard/cities/{{ flight.to.id }}">{{
+          flight.to.name
+        }}</a>
+      </h2>
+      <h1>{{ flight.cost | currency: "PKR" + " " }}</h1>
+    </div>
+
+    <form [formGroup]="updateFlight" (ngSubmit)="handleCreateFlight()">
+      <div class="form-control">
+        <label for="">Origin City</label>
+        <select formControlName="from" id="">
+          <option disabled value="" selected>Select Origin</option>
+          <option *ngFor="let city of cities" [value]="city.id">
+            {{ city.name }}
+          </option>
+        </select>
+        <span *ngIf="getFrom().invalid && getFrom().touched" class="text-danger"
+          >Origin is required</span
+        >
+      </div>
+      <div class="form-control">
+        <label for="">Destination City</label>
+        <select formControlName="to" id="">
+          <option disabled value="" selected>Select Destination</option>
+          <option *ngFor="let city of cities" [value]="city.id">
+            {{ city.name }}
+          </option>
+        </select>
+        <span *ngIf="getTo().invalid && getTo().touched" class="text-danger"
+          >Destination is required</span
+        >
+      </div>
+      <div class="form-control">
+        <label for="">Flight Cost</label>
+        <input
+          formControlName="cost"
+          name="cost"
+          type="number"
+          min="0"
+          placeholder="E.g. 20000"
+        />
+        <span *ngIf="getCost().invalid && getCost().touched" class="text-danger"
+          >Flight Cost is required</span
+        >
+      </div>
+      <div class="form-control d-flex dir-row">
+        <button type="save" class="btn" [disabled]="isInvalid()">Update</button>
+        <button type="button" class="btn bg-danger" (click)="removeThis()">
+          Remove
+        </button>
+      </div>
+    </form>
+  </div>
+  <app-new-flight [cities]="cities"></app-new-flight>
+  <div *ngIf="!flight"></div>
+</div>

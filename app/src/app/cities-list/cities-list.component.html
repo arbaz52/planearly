@@ -1,0 +1,11 @@
+<div class="cities">
+  <div class="text-danger" *ngIf="error">{{ error }}</div>
+  <a
+    class="city"
+    *ngFor="let city of cities"
+    routerLink="/dashboard/cities/{{ city.id }}"
+    routerLinkActive="selected"
+  >
+    {{ city.name }}
+  </a>
+</div>

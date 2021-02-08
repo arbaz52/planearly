@@ -122,4 +122,11 @@ export default class Flight {
     const flights = await db.find({}, ["from", "to"]);
     return new Result<Flight[]>(flights, 200);
   }
+
+  static async getOne(id: string) {
+    const db = new Database<Flight>(Flight);
+    const flight = await db.findOne({ where: { id } }, ["from", "to"]);
+    if (flight) return new Result<Flight>(flight, 200);
+    return new Result<Error>(new Error("Flight not found"), 404);
+  }
 }

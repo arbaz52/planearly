@@ -1,0 +1,21 @@
+.flight {
+  display: block;
+  padding: 8px 16px;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+  &.selected {
+    background: var(--accent);
+    color: white;
+    .cost {
+      font-size: 0.9em;
+      color: white;
+    }
+  }
+  .cost {
+    font-size: 0.9em;
+    color: var(--disabled-text);
+    text-decoration: none;
+  }
+}

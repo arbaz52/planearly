@@ -6,6 +6,7 @@
   --link: #007bff;
   --accent-dark: #c5597f;
   --danger: #dc3545;
+  --primary: #007bff;
 
   --disabled-bg: #ccc;
   --disabled-text: #888;
@@ -39,6 +40,16 @@ body {
 .text- {
   &secondary {
     color: var(--secondary-text);
+  }
+}
+.bg- {
+  &danger {
+    background: var(--danger) !important;
+    color: white !important;
+  }
+  &primary {
+    background: var(--primary) !important;
+    color: white !important;
   }
 }
 
@@ -75,6 +86,13 @@ app-flight-plan {
 }
 
 app-not-found {
+  overflow: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+app-dashboard {
   overflow: auto;
   flex: 1;
   display: flex;
@@ -125,6 +143,9 @@ h5 {
     &-0 {
       margin-bottom: 0;
     }
+    &-1 {
+      margin-bottom: 4px;
+    }
   }
   &t {
     &-0 {
@@ -133,6 +154,35 @@ h5 {
     &-2 {
       margin-top: 8px;
     }
+  }
+  &r {
+    &-0 {
+      margin-right: 0;
+    }
+    &-2 {
+      margin-right: 8px;
+    }
+  }
+}
+.d {
+  &-block {
+    display: block;
+  }
+  &-flex {
+    display: flex;
+  }
+}
+.dir {
+  &-row {
+    flex-direction: row !important;
+    &-reverse {
+      flex-direction: row-reverse !important;
+    }
+  }
+}
+.g {
+  &-4 {
+    gap: 16px;
   }
 }
 .btn {
@@ -223,7 +273,10 @@ form {
 }
 
 .icon {
-  width: 12px;
+  height: 12px;
+  &-md {
+    height: 24px;
+  }
 }
 
 .logo {
@@ -244,4 +297,37 @@ form {
 .text-loading {
   display: flex;
   gap: 12px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background: #f3f3f3;
+}
+
+::-webkit-scrollbar-thumb {
+  width: 8px;
+  background: #ccc;
+}
+
+select {
+  padding: 13px 8px;
+  background-color: #f5f5f5;
+  border: 1px solid transparent;
+  min-width: 200px;
+  ::placeholder {
+    color: #6c757d;
+  }
+  &.invalid {
+    border: 1px solid red;
+  }
+
+  background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position-x: 100%;
+  background-position-y: 8px;
+  appearance: none;
+
+  & option {
+    padding: 8px;
+  }
 }

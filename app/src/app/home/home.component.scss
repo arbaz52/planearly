@@ -7,7 +7,11 @@
 .hero {
   display: flex;
   flex-direction: column;
-  background-color: #fd79a822;
+  // background-color: #fd79a822;
+  background: url("/assets/da-pinchi.svg");
+  background-position: top center;
+  background-size: cover;
+
   .content {
     display: flex;
     flex-direction: column;

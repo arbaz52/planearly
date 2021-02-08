@@ -1,0 +1,50 @@
+<app-header></app-header>
+<div class="container">
+  <div class="wrapper">
+    <aside>
+      <div class="heading">
+        <h1 class="mb-1">Admin Dashboard</h1>
+        <span *ngIf="cities && flights"
+          >{{ cities.length }} cities, {{ flights.length }} flights connecting
+          cites.</span
+        >
+        <span class="text-danger" *ngIf="error">{{ error }}</span>
+        <span *ngIf="loadingEntity || removingEntity || updatingEntity"
+          ><img src="assets/loading.svg" class="spinner" /> Please wait, loading
+          information</span
+        >
+      </div>
+      <div class="tabs">
+        <a routerLink="/dashboard/cities" routerLinkActive="selected">
+          Cities
+        </a>
+        <a routerLink="/dashboard/flights" routerLinkActive="selected">
+          Flights
+        </a>
+      </div>
+      <app-cities-list *ngIf="entity === 'cities'"></app-cities-list>
+      <app-flights-list
+        *ngIf="entity === 'flights'"
+        [flights]="flights"
+      ></app-flights-list>
+      <button class="btn" (click)="newEntity()">
+        New {{ entity === "cities" ? "City" : "Flight" }}
+      </button>
+    </aside>
+    <div class="content">
+      <app-pick-entity *ngIf="!id && entity === 'cities'"></app-pick-entity>
+      <app-edit-city
+        *ngIf="entity === 'cities' && loadedEntity"
+        [cityDetails]="loadedEntity"
+        (update)="updateCity($event)"
+        (remove)="removeCity($event)"
+      ></app-edit-city>
+      <app-edit-flight
+        *ngIf="entity === 'flights'"
+        [cities]="cities"
+        [flight]="loadedEntity"
+      >
+      </app-edit-flight>
+    </div>
+  </div>
+</div>

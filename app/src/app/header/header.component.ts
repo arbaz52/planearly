@@ -48,7 +48,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {}
 }
 
-interface Token {
+export interface Token {
   isAdmin: boolean;
   exp: number;
 }
